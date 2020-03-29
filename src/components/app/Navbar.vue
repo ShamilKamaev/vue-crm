@@ -2,7 +2,7 @@
   <nav class="navbar orange lighten-1">
     <div class="nav-wrapper">
       <div class="navbar-left">
-        <a href="#"  @click.prevent="$emit('toggleNavbar')">
+        <a href="#" @click.prevent="$emit('click')">
           <i class="material-icons black-text">dehaze</i>
         </a>
         <span class="black-text">{{date | date('datetime')}}</span>
@@ -10,10 +10,12 @@
 
       <ul class="right hide-on-small-and-down">
         <li>
-          <a class="dropdown-trigger black-text" 
-            href="#" 
+          <a
+            class="dropdown-trigger black-text"
+            href="#"
             data-target="dropdown"
-            ref="dropdown">
+            ref="dropdown"
+          >
             USER NAME
             <i class="material-icons right">arrow_drop_down</i>
           </a>
@@ -37,33 +39,31 @@
   </nav>
 </template>
 
+
 <script>
 export default {
   data: () => ({
     date: new Date(),
-    interval: null
+    interval: null,
+    dropdown: null,
   }),
-
   methods: {
-    logout() {
-      console.log('logout');
-      this.$router.push('login?message=logout')
+    async logout() {
+      await this.$store.dispatch('logout')
+      this.$router.push('/login?message=logout')
     }
   },
-
   mounted() {
-    this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
-      constrainWidth: false
-    })
-
     this.interval = setInterval(() => {
       this.date = new Date()
     }, 1000)
+    this.dropdown = M.Dropdown.init(this.$refs.dropdown, {
+      constrainWidth: false
+    })
   },
-
   beforeDestroy() {
     clearInterval(this.interval)
-    if(this.dropdown && this.dropdown.destroy) {
+    if (this.dropdown && this.dropdown.destroy) {
       this.dropdown.destroy()
     }
   }
