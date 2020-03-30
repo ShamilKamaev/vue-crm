@@ -16,7 +16,7 @@
             data-target="dropdown"
             ref="dropdown"
           >
-            USER NAME
+            {{ name }}
             <i class="material-icons right">arrow_drop_down</i>
           </a>
 
@@ -42,17 +42,27 @@
 
 <script>
 export default {
+  name: 'Navbar',
+
   data: () => ({
     date: new Date(),
     interval: null,
     dropdown: null,
   }),
+
+  computed: {
+    name() {
+      return this.$store.getters.info.name
+    }
+  },
+
   methods: {
     async logout() {
       await this.$store.dispatch('logout')
       this.$router.push('/login?message=logout')
     }
   },
+
   mounted() {
     this.interval = setInterval(() => {
       this.date = new Date()
@@ -61,6 +71,7 @@ export default {
       constrainWidth: false
     })
   },
+
   beforeDestroy() {
     clearInterval(this.interval)
     if (this.dropdown && this.dropdown.destroy) {
